@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="@@HTMLLANG@@" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>@@TITLE@@</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.181.2/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/"
+        }
+      }
+    </script>
+    <style>
+      @font-face {
+        font-family: "Geist";
+        src: url("assets/fonts/Geist.woff2") format("woff2");
+        font-weight: 100 900;
+        font-display: block;
+      }
+      @font-face {
+        font-family: "Geist Mono";
+        src: url("assets/fonts/GeistMono.woff2") format("woff2");
+        font-weight: 100 900;
+        font-display: block;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #05060c;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #05060c;
+      }
+      #stage {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      .caption {
+        position: absolute;
+        pointer-events: none;
+        text-align: center;
+        color: #ffffff;
+      }
+      /* desk mode: Arial Bold 47 px in a 50% black rounded box, box centre 285 px from the top */
+      .caption--box {
+        top: 285px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: max-content;
+        max-width: 600px;
+        padding: 15px 34px;
+        border-radius: 18px;
+        background: rgba(0, 0, 0, 0.5);
+        text-wrap: balance;
+        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+        font-weight: 700;
+        font-size: 47px;
+        line-height: 1.42;
+      }
+      /* keyboard mode: white bold, no box, upper middle */
+      .caption--plain {
+        top: 600px;
+        left: 120px;
+        right: 120px;
+        display: block;
+        font-family: "Geist", sans-serif;
+        font-weight: 700;
+        font-size: 50px;
+        line-height: 1.16;
+        letter-spacing: -0.01em;
+        color: #f7f4ee;
+        text-shadow: 0 2px 6px rgba(10, 6, 24, 0.6), 0 0 22px rgba(10, 6, 24, 0.45);
+      }
+      .caption .nb {
+        white-space: nowrap;
+      }
+      /* the optional ending: a fade to black over the last shot */
+      .fade {
+        position: absolute;
+        inset: 0;
+        background: #000;
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="@@END@@" data-width="1080" data-height="1920">
+      <canvas id="stage" class="clip" data-start="0" data-duration="@@END@@" data-track-index="0" data-layout-allow-overflow></canvas>
+<!--@@CLIPS@@-->
+    </div>
+
+    <script>
+      // captions switch on the cuts; the first is up from frame 0, the others fade in fast
+      const tl = gsap.timeline({ paused: true });
+      document.querySelectorAll("p.caption").forEach((el, i) => {
+        if (i === 0 && parseFloat(el.dataset.start) === 0) return;
+        tl.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.08, ease: "none" }, parseFloat(el.dataset.start));
+      });
+      const fade = document.getElementById("fade");
+      if (fade) tl.fromTo(fade, { opacity: 0 }, { opacity: 1, duration: parseFloat(fade.dataset.fade), ease: "none" }, parseFloat(fade.dataset.start));
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+
+    <script type="module">
+      import { createStage } from "./engine/runtime.js";
+      import * as mode from "./modes/@@MODE@@/set.js";
+      import * as scenario from "./modes/@@MODE@@/scenarios/@@SCENARIO@@.js";
+@@CHAR_IMPORTS@@
+      // the timeline for this episode and language, written by tools/timeline.py
+      const TL = @@TL@@;
+      const characters = { @@CHAR_MAP@@ };
+      let stage = null;
+      let isReady = false;
+      let lastTime = window.__hfThreeTime || 0;
+      async function build() {
+        await Promise.all([
+          document.fonts.load('600 30px "Geist"'),
+          document.fonts.load('700 44px "Geist Mono"'),
+          document.fonts.load("700 47px Arial"),
+        ]);
+        await document.fonts.ready;
+        stage = createStage({ canvas: document.getElementById("stage"), TL, mode, scenario, characters });
+        isReady = true;
+        stage.renderAt(window.__hfThreeTime ?? lastTime);
+      }
+      window.__hf = window.__hf || {};
+      window.__hf.buildReady = window.__hf.buildReady || {};
+      window.__hf.buildReady["studio-3d"] = build();
+      window.addEventListener("hf-seek", (e) => {
+        lastTime = e.detail.time;
+        if (isReady) stage.renderAt(lastTime);
+      });
+    </script>
+  </body>
+</html>

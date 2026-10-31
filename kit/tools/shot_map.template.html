@@ -1,0 +1,214 @@
+<title>@@TITLE@@ Reel Shot Map</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+  /* Layout: a storyboard wall. A scene strip to scale across the top, then one card per beat:
+     our still beside theirs, the line, the camera move and what appears, and a note box. */
+  :root {
+    --bg: #eef0f2; --surface: #ffffff; --sunk: #e3e7eb; --fg: #1a1d23; --muted: #5b6370; --line: #d3d8de;
+    --accent: #d9622b; --green: #2b8f55; --tag: #ffd21f; --tag-ink: #3a2208; --pt: #0f6d5e; --en: #2f6fd8;
+    --display: "Montserrat", "Arial Black", system-ui, sans-serif;
+    --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #111316; --surface: #1a1d22; --sunk: #23272e; --fg: #e8ebef; --muted: #9aa3ae; --line: #2e333b;
+      --accent: #f0864f; --green: #4cc07f; --pt: #3fc2aa; --en: #6f9cf0; color-scheme: dark; }
+  }
+  :root[data-theme="dark"] { --bg: #111316; --surface: #1a1d22; --sunk: #23272e; --fg: #e8ebef; --muted: #9aa3ae; --line: #2e333b;
+    --accent: #f0864f; --green: #4cc07f; --pt: #3fc2aa; --en: #6f9cf0; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font: 15px/1.5 var(--body); }
+  .wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 64px; display: grid; gap: 22px; }
+  .eyebrow { font: 600 12px/1 var(--body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  h1 { font: 900 clamp(28px, 4.2vw, 42px)/1.05 var(--display); margin: 8px 0 6px; text-wrap: balance; }
+  .lede { color: var(--muted); max-width: 70ch; margin: 0; }
+  .bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .fact { font: 500 12.5px var(--mono); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px; font-variant-numeric: tabular-nums; }
+  .toggle { display: inline-flex; align-items: center; gap: 8px; font: 600 14px var(--body); cursor: pointer; }
+  .toggle input { width: 18px; height: 18px; accent-color: var(--accent); }
+  .strip { display: flex; height: 44px; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); background: var(--surface); }
+  .strip a { display: flex; align-items: center; justify-content: center; text-decoration: none; color: var(--fg); font: 700 11px var(--display); border-right: 1px solid var(--line); min-width: 0; overflow: hidden; white-space: nowrap; padding: 0 2px; }
+  .strip a:nth-child(odd) { background: var(--sunk); }
+  .strip a:hover { background: color-mix(in srgb, var(--tag) 40%, transparent); }
+  .strip a:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+  section.scene { display: grid; gap: 12px; scroll-margin-top: 16px; }
+  section.scene h2 { margin: 6px 0 0; font: 900 22px/1.15 var(--display); display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  section.scene h2 .n { font: 500 13px var(--mono); color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 14px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 16px; }
+  .imgs { display: flex; gap: 8px; }
+  .imgs figure { margin: 0; display: grid; gap: 4px; width: 132px; }
+  .imgs img { width: 100%; max-width: 100%; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 10px; background: #000; display: block; }
+  .imgs figcaption { font: 800 10.5px var(--display); letter-spacing: 0.05em; text-transform: uppercase; }
+  .imgs .en figcaption { color: var(--en); } .imgs .pt figcaption { color: var(--pt); }
+  body.noref .imgs .pt { display: none; }
+  .body { display: grid; gap: 10px; min-width: 0; align-content: start; }
+  .top { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  .id { font: 800 13px var(--display); background: var(--tag); color: var(--tag-ink); border-radius: 6px; padding: 1px 7px; }
+  .time { font: 500 12.5px var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+  .split { font: 700 11px var(--display); letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent); border: 1.5px solid var(--accent); border-radius: 999px; padding: 1px 8px; }
+  .en-line { font: 600 17px/1.4 var(--body); margin: 0; }
+  .pt-line { color: var(--muted); margin: 0; font-size: 14px; }
+  .rows { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 6px 10px; font-size: 14px; }
+  .rows dt { font: 800 11px var(--display); letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+  .rows dd { margin: 0; }
+  .cam { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .cam span { background: var(--sunk); border-radius: 6px; padding: 1px 7px; font-size: 13.5px; }
+  .cam span.mv { background: color-mix(in srgb, var(--accent) 16%, transparent); }
+  .cam span.cut { background: var(--fg); color: var(--bg); font-weight: 600; }
+  .cam i { color: var(--muted); font-style: normal; }
+  .items { display: flex; flex-wrap: wrap; gap: 6px; }
+  .items span { border: 1px solid var(--line); border-radius: 999px; padding: 1px 9px; font-size: 13px; }
+  .items b { font-weight: 600; }
+  .items em { font: 500 11px var(--mono); color: var(--muted); font-style: normal; }
+  .note { display: grid; gap: 6px; }
+  .note textarea { width: 100%; min-height: 54px; resize: vertical; font: 14px/1.45 var(--body); color: var(--fg); background: var(--sunk); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; }
+  .note .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .note button { font: 600 13px var(--body); border-radius: 9px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); padding: 6px 12px; cursor: pointer; }
+  .note button:hover { border-color: var(--muted); }
+  .note button:focus-visible, textarea:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .note .st { font-size: 12.5px; color: var(--muted); }
+  .card.has { border-color: var(--green); box-shadow: inset 4px 0 0 var(--green); }
+  .foot { color: var(--muted); font-size: 13px; }
+  @media (max-width: 720px) {
+    .card { grid-template-columns: minmax(0, 1fr); }
+    .imgs figure { width: calc(50% - 4px); }
+    .strip a { font-size: 0; }
+  }
+  @media (max-width: 420px) { .rows { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Shot map · @@NAME@@ (EN) · private</div>
+    <h1>What happens in every beat</h1>
+    <p class="lede">Each card is one sentence of the voice: our still from the middle of the beat, the matching frame of their Portuguese reel, the line, what the camera does and everything that pops on screen, read from the build itself. Leave a note on any beat and I will apply it.</p>
+  </header>
+  <div class="bar">
+    <span class="fact" id="f1"></span>
+    <span class="fact" id="f2"></span>
+    <span class="fact" id="f3"></span>
+    <label class="toggle"><input type="checkbox" id="showref" checked> Show their frame</label>
+  </div>
+  <nav class="strip" id="strip" aria-label="Scenes to scale"></nav>
+  <div id="scenes"></div>
+  <p class="foot">Generated from the build by kit/tools/shot_map.mjs and kit/tools/shot_map.py (this repo@@SLUG@@). Their frames are here for study only.</p>
+</div>
+
+<script id="data" type="application/json">@@DATA@@</script>
+<script>
+(() => {
+  const D = JSON.parse(document.getElementById("data").textContent);
+  const R = D.rows;
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const scenes = [];
+  R.forEach((r) => { if (!scenes.length || scenes[scenes.length - 1].key !== r.scene) scenes.push({ key: r.scene, title: r.title, rows: [] }); scenes[scenes.length - 1].rows.push(r); });
+  $("f1").textContent = `${scenes.length} scenes · ${R.length} beats`;
+  $("f2").textContent = `${D.duration.toFixed(1)} s`;
+  $("f3").textContent = `${R.filter((r) => r.split).length} beats in split screen`;
+  const strip = $("strip");
+  scenes.forEach((s, i) => {
+    const a = el("a", null, `${i + 1}`);
+    const len = s.rows[s.rows.length - 1].end - s.rows[0].start;
+    a.style.flex = `${len} 1 0`;
+    a.href = `#s${i + 1}`;
+    a.title = `${i + 1}. ${s.title} (${len.toFixed(1)} s)`;
+    a.textContent = len > 9 ? `${i + 1}. ${s.title}` : `${i + 1}`;
+    strip.appendChild(a);
+  });
+  const cards = {};
+  const host = $("scenes");
+  scenes.forEach((s, i) => {
+    const sec = el("section", "scene");
+    sec.id = `s${i + 1}`;
+    const h = el("h2");
+    h.append(el("span", null, `${i + 1}. ${s.title}`), el("span", "n", `${s.rows[0].start.toFixed(1)}–${s.rows[s.rows.length - 1].end.toFixed(1)} s · ${s.rows.length} beat${s.rows.length > 1 ? "s" : ""}`));
+    sec.appendChild(h);
+    s.rows.forEach((r) => {
+      const c = el("article", "card");
+      const imgs = el("div", "imgs");
+      for (const [cls, src, cap] of [["en", `shots/${r.id}.jpg`, "Ours (EN)"], ["pt", `ref/${r.id}.jpg`, "Theirs (PT)"]]) {
+        const f = el("figure", cls);
+        const im = el("img");
+        im.src = src; im.alt = `${cap}, beat ${r.id.slice(1)}`; im.loading = "lazy"; im.width = 360; im.height = 640;
+        f.append(im, el("figcaption", null, cap));
+        imgs.appendChild(f);
+      }
+      const b = el("div", "body");
+      const top = el("div", "top");
+      top.append(el("span", "id", `Beat ${r.id.slice(1)}`), el("span", "time", `${r.start.toFixed(1)}–${r.end.toFixed(1)} s · ${(r.end - r.start).toFixed(1)} s`));
+      if (r.split) top.appendChild(el("span", "split", "Split screen"));
+      b.append(top, el("p", "en-line", r.en), el("p", "pt-line", r.pt));
+      const dl = el("dl", "rows");
+      const cam = el("dd", "cam");
+      r.camera.forEach((w, k) => {
+        if (k) cam.appendChild(el("i", null, "→"));
+        cam.appendChild(el("span", w === "cut" ? "cut" : w.startsWith("hold") ? "" : "mv", w));
+      });
+      if (!r.camera.length) cam.appendChild(el("span", "", "hold"));
+      const it = el("dd", "items");
+      r.items.forEach((x) => { const sp = el("span"); sp.append(el("b", null, x.kind), document.createTextNode(x.text ? ` ${x.text} ` : " "), el("em", null, `${x.at.toFixed(1)} s`)); it.appendChild(sp); });
+      if (!r.items.length) it.appendChild(el("span", null, "captions only"));
+      dl.append(el("dt", null, "Camera"), cam, el("dt", null, "On screen"), it);
+      b.appendChild(dl);
+      const note = el("div", "note");
+      const ta = el("textarea");
+      ta.id = `note-${r.id}`;
+      ta.setAttribute("aria-label", `Note for beat ${r.id.slice(1)}`);
+      ta.placeholder = "Change something in this beat?";
+      const row = el("div", "row");
+      const btn = el("button", null, "Save note");
+      btn.type = "button";
+      const st = el("span", "st", "");
+      row.append(btn, st);
+      note.append(ta, row);
+      b.appendChild(note);
+      c.append(imgs, b);
+      sec.appendChild(c);
+      cards[r.id] = { c, ta, btn, st, r };
+    });
+    host.appendChild(sec);
+  });
+  try { if (localStorage.getItem("shotmap-noref") === "1") { $("showref").checked = false; document.body.classList.add("noref"); } } catch (e) {}
+  $("showref").addEventListener("change", (e) => {
+    document.body.classList.toggle("noref", !e.target.checked);
+    try { localStorage.setItem("shotmap-noref", e.target.checked ? "0" : "1"); } catch (err) {}
+  });
+
+  // notes: db collection "feedback", one document per beat id
+  let db = null;
+  const notes = {};
+  const paint = () => Object.values(cards).forEach(({ c, ta, st, r }) => {
+    const n = notes[r.id];
+    c.classList.toggle("has", !!(n && n.note));
+    if (document.activeElement !== ta) ta.value = n && typeof n.note === "string" ? n.note : "";
+    st.textContent = db ? (n && n.at ? "Saved " + new Date(n.at).toLocaleString() : "") : "Notes save when this page is open in claude.ai.";
+  });
+  Object.values(cards).forEach(({ btn }) => { btn.disabled = true; });
+  paint();
+  (async () => {
+    try { db = window.claude && window.claude.use ? await window.claude.use("db") : null; } catch (e) { db = null; }
+    if (!db) return;
+    Object.values(cards).forEach(({ btn }) => { btn.disabled = false; });
+    paint();
+    db.collection("feedback").onSnapshot((snap) => {
+      for (const k of Object.keys(notes)) delete notes[k];
+      snap.docs.forEach((d) => { notes[d.id] = d.data(); });
+      paint();
+    }, () => Object.values(cards).forEach(({ st }) => { st.textContent = "Notes are unavailable right now."; }));
+  })();
+  Object.values(cards).forEach(({ ta, btn, st, r }) => btn.addEventListener("click", async () => {
+    if (!db) return;
+    btn.disabled = true;
+    st.textContent = "Saving…";
+    try {
+      await db.collection("feedback").doc(r.id).set({ beat: r.id, scene: r.title, line: r.en, note: ta.value.trim(), at: new Date().toISOString() });
+      st.textContent = "Saved.";
+    } catch (e) {
+      st.textContent = e && e.code === "invalid_argument" ? "You can read notes here but not save them." : "Could not save. Try again in a moment.";
+    } finally { btn.disabled = false; }
+  }));
+})();
+</script>

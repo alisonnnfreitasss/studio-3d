@@ -1,0 +1,26 @@
+{
+ "id": "grok",
+ "name": "Grok",
+ "kind": "agent",
+ "role": "agent",
+ "personality": "The cheeky one. Edgy jokes, smirks and winks, says the quiet part out loud.",
+ "look": "Our own design, two variants to pick from. visor: a glossy black block with white-glowing eye bars behind a dark visor and a cocky tilted antenna. orb: a faceted black sphere with a thin white ring orbiting it and two white eyes. No xAI marks.",
+ "variant": "orb",
+ "variants": [
+  "visor",
+  "orb"
+ ],
+ "palette": {
+  "body": "#16181d",
+  "feet": "#0d0e12",
+  "glow": "#f4f6ff"
+ },
+ "scale": {
+  "keyboard": 0.95,
+  "desk": 0.64
+ },
+ "voices": {},
+ "notes": [
+  "Look: orb, the user's pick. The visor design stays available as a variant."
+ ]
+}

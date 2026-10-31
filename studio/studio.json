@@ -1,0 +1,19 @@
+{
+ "name": "Studio 3D",
+ "version": 1,
+ "about": "3D videos made in code. three.js scenes rendered by HyperFrames, written by Claude Code.",
+ "output": {"width": 1080, "height": 1920, "fps": 30},
+ "languages": [{"id": "en", "label": "English", "htmlLang": "en"}, {"id": "pt", "label": "Português", "htmlLang": "pt-BR"}],
+ "lead": null,
+ "characters": ["claude", "codex", "grok"],
+ "modes": ["desk", "keyboard"],
+ "tts": {"provider": "elevenlabs", "model": "eleven_multilingual_v2", "envFile": "../.env", "keyName": "ELEVENLABS_API_KEY"},
+ "render": {"quality": "delivery", "hyperframes": "0.8.181"},
+ "server": {"host": "127.0.0.1", "port": 8810},
+ "agents": ["claude", "codex", "grok"],
+ "pages": [
+  {"id": "explainers", "handle": "explainers", "name": "Explainers", "url": null, "language": "en", "format": "explainer", "about": "3D explainers: how things work.", "kitBrand": "default"},
+  {"id": "cinematic", "handle": "cinematic", "name": "Cinematic", "url": null, "language": "en", "format": "cinematic", "about": "Realistic 3D videos: dark, textured, voice only.", "kitBrand": "default"},
+  {"id": "sitcoms", "handle": "sitcoms", "name": "Sitcoms", "url": null, "language": "en", "format": "sitcom", "about": "3D sitcoms: your character and the AI agents.", "agents": ["claude", "codex", "grok"], "modes": ["desk", "keyboard"]}
+ ]
+}

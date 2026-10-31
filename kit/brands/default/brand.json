@@ -1,0 +1,5 @@
+{
+ "name": "Default",
+ "voice": {"provider": "local", "say": "Daniel", "rate": 185},
+ "lead": {"kind": "lead", "variant": "tee-blue"}
+}

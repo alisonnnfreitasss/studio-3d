@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Still</title>
+    <!-- One frame of any mode, scenario and shot, for checking a set or a camera by eye:
+         /ui/still.html?mode=desk&scenario=dusk&camera=wide&on=claude&t=0.6&w=540&cast=lead,claude,codex&emotion=happy
+         Sets window.__ready when the frame is drawn. -->
+    <style>
+      html, body { margin: 0; background: #111; }
+      canvas { display: block; }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.181.2/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <canvas id="c"></canvas>
+    <script type="module">
+      import { createStage } from "/engine/runtime.js";
+      const q = new URLSearchParams(location.search);
+      const modeId = q.get("mode") || "desk";
+      const studio = await (await fetch("/api/studio")).json();
+      const md = studio.modes[modeId];
+      const scenarioId = q.get("scenario") || md.defaultScenario;
+      const lead = q.get("lead") || studio.studio.lead;
+      const cast = (q.get("cast") || `${lead},claude,codex`).split(",");
+      const w = parseInt(q.get("w") || "540", 10), h = Math.round((w * 16) / 9);
+      const t = parseFloat(q.get("t") || "0.6");
+      const defaults = Object.fromEntries(cast.map((c) => [c, studio.characters[c]?.variant]).filter(([, v]) => v));
+      const variants = { ...defaults, ...Object.fromEntries((q.get("variants") || "").split(",").filter(Boolean).map((x) => x.split(":"))) };
+      const scales = Object.fromEntries(cast.map((c) => [c, studio.characters[c]?.scale?.[modeId]]).filter(([, v]) => v));
+      const emotion = q.get("emotion");
+      const TL = {
+        lead, cast, mode: modeId, scenario: scenarioId, end: 4, lang: q.get("lang") || "en", lines: [], hops: [], leans: [], scales, variants, screen: null,
+        title: q.get("title") || "",
+        // a test board: &boardTitle=...&board=line one|line two|~struck line
+        board: q.get("board") ? { title: q.get("boardTitle") || "", lines: q.get("board").split("|").map((x, i) => ({ text: x.replace(/^~/, ""), color: ["blue", "green", "red", "black"][i % 4], ...(x.startsWith("~") ? { strikeT: 0 } : {}) })) } : null,
+        emotions: emotion ? cast.map((c) => ({ t: 0, who: c, emotion })) : [],
+        props: q.get("prop") ? [{ who: lead, start: 0, end: 4, prop: q.get("prop") }] : [],
+        shots: [{ n: 1, start: 0, end: 4, camera: { type: q.get("camera") || "wide", ...(q.get("on") ? { on: q.get("on") } : {}), ...(q.get("with") ? { with: q.get("with") } : {}) } }],
+      };
+      const [mode, scenario, ...mods] = await Promise.all([import(`/modes/${modeId}/set.js`), import(`/modes/${modeId}/scenarios/${scenarioId}.js`), ...cast.map((c) => import(`/characters/${c}/model.js`))]);
+      const characters = Object.fromEntries(cast.map((c, i) => [c, mods[i]]));
+      const canvas = document.getElementById("c");
+      canvas.width = w;
+      canvas.height = h;
+      const stage = createStage({ canvas, width: w, height: h, TL, mode, scenario, characters });
+      stage.renderAt(t);
+      // where each character lands in the frame, in % from the top-left: the face (head anchor)
+      // centre, the head's height, and the whole figure's top and bottom
+      const { Box3, Vector3 } = await import("three");
+      const pct = (v) => { const p = v.clone().project(stage.camera); return [Math.round((p.x + 1) * 50), Math.round((1 - p.y) * 50)]; };
+      window.__info = Object.fromEntries(cast.map((c) => {
+        const ch = stage.cast[c];
+        const face = pct(ch.anchors.head.getWorldPosition(new Vector3()));
+        const hb = new Box3().setFromObject(ch.anchors.head.parent || ch.anchors.head), fb = new Box3().setFromObject(ch.root);
+        const ys = (b) => [0, 1].flatMap((i) => [0, 1].flatMap((j) => [0, 1].map((k) => pct(new Vector3(i ? b.max.x : b.min.x, j ? b.max.y : b.min.y, k ? b.max.z : b.min.z))[1])));
+        const hy = ys(hb), fy = ys(fb);
+        return [c, { face, head: Math.max(...hy) - Math.min(...hy), top: Math.min(...fy), bottom: Math.max(...fy) }];
+      }));
+      window.__ready = true;
+    </script>
+  </body>
+</html>

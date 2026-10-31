@@ -1,0 +1,91 @@
+{
+ "id": "desk",
+ "name": "Desk",
+ "summary": "A quiet, filmic desk sitcom: the lead at a desk at night, the agents standing on the desk, a big window of city lights behind.",
+ "seat": "chair",
+ "captions": "box",
+ "audio": "room",
+ "timing": {
+  "leadIn": 0.4,
+  "cutBefore": 0.22,
+  "holdAfter": 0.32,
+  "lastHold": 0.5,
+  "endWide": 2.4,
+  "ending": "hold",
+  "fadeOut": 0.7,
+  "fadeHold": 0.2
+ },
+ "autoCamera": {
+  "lead": "lead",
+  "agent": "cu",
+  "silent": "front",
+  "end": "end",
+  "leadLate": "front",
+  "leadSwitch": 0.5,
+  "wides": [
+   0.3,
+   0.7
+  ]
+ },
+ "shotTypes": {
+  "lead": "the lead, three-quarter MCU from the agents' side, pushes in 10%",
+  "front": "the lead frontal MCU, eyes in the lens, for sincere lines and silent beats",
+  "cu": "an agent close at desk height, the lead soft behind, pulls out 12%",
+  "two": "two agents (or an agent and the lead) in one frame",
+  "wide": "the whole desk from the front, near deep focus",
+  "high": "a high wide over the desk",
+  "end": "the closing wide that pulls back about 20% to reveal the room",
+  "board": "the classroom's whiteboard filling the frame (classroom only)"
+ },
+ "spec": {
+  "Set": "One real-size desk at night: lamp, laptop, mug, chair; a big window of city lights behind",
+  "Screen": "Nothing to read: the laptop only glows",
+  "Render look": "Low poly, teal and orange, matte, faint bloom, soft shadows",
+  "Lens and focus": "Long lenses (21 to 22 degrees), very shallow focus: city lights become big soft discs",
+  "Camera motion": "One slow dolly per shot: push in on the lead, pull out on the agents",
+  "Cutting": "About 20 shots per 45 s; cut 0.2 s before each line",
+  "Captions": "Arial Bold 47 px in a 50% black rounded box, centred 285 px from the top",
+  "Sound": "Voices and room tone only (-42 dBFS); no music, no effects",
+  "Loudness": "About -15 LUFS",
+  "Best for": "Everyday-AI jokes, daily posting; cheaper per episode (one set, fewer shots)"
+ },
+ "defaultScenario": "night-city",
+ "scenarios": {
+  "night-city": {
+   "name": "Night city",
+   "summary": "The desk at night: a warm desk lamp, a big window of city lights the long lens turns into soft discs."
+  },
+  "dusk": {
+   "name": "Dusk",
+   "summary": "Sundown: a lavender sky turning pink, then peach at the horizon, dark towers with the first lit windows, the lamp already on."
+  },
+  "rain": {
+   "name": "Rain",
+   "summary": "A grey evening: rain streaking past the window and beading on the glass, cool towers, the lamp the only warm thing in the room."
+  },
+  "morning": {
+   "name": "Morning",
+   "summary": "Daylight: a pale blue sky, soft blue-grey towers, the sun behind the desk, the lamp off."
+  },
+  "living-room": {
+   "name": "Living room",
+   "summary": "An evening on the sofa: the lead sits back on a teal sofa, the agents stand on the coffee table, a floor lamp warms the room, the city at blue hour through the window."
+  },
+  "classroom": {
+   "name": "Classroom",
+   "summary": "An after-hours lesson: a whiteboard writes itself as the agent explains from a stack of books with a pointer, the lead at a school desk, a bookshelf, a window at blue hour."
+  },
+  "diner": {
+   "name": "Diner",
+   "summary": "A booth at night: a red vinyl booth, a cream table with a chrome edge, pendant lamps, a night street with neon signs through the window, a checked floor."
+  },
+  "campfire": {
+   "name": "Campfire",
+   "summary": "A camp in the mountains at dusk: the lead on a log, the agents on a plank camp table, a fire low in front that lights everyone warm, a tent and a lantern behind, violet mountains and the first stars."
+  },
+  "rooftop": {
+   "name": "Rooftop",
+   "summary": "A city rooftop at golden hour: a wooden bench and table, string lights between two poles, a parapet and a water tower, the skyline against a gold-to-blue sky with the sun low."
+  }
+ }
+}

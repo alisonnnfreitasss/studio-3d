@@ -1,0 +1,72 @@
+{
+  "id": "keyboard",
+  "name": "Keyboard",
+  "summary": "A fast, bright sitcom on a giant laptop keyboard, with a wall-size dashboard behind the cast that carries jokes and numbers.",
+  "seat": "keys",
+  "captions": "plain",
+  "audio": "music",
+  "timing": {
+    "leadIn": 0.24,
+    "cutBefore": 0.2,
+    "holdAfter": 0.3,
+    "lastHold": 0.55,
+    "endWide": 1.9,
+    "ending": "hold",
+    "fadeOut": 0.7,
+    "fadeHold": 0.2,
+    "splitLong": {
+      "minDur": 2.6,
+      "punch": 0.82
+    }
+  },
+  "autoCamera": {
+    "lead": "lead",
+    "agent": "cu",
+    "silent": "board",
+    "end": "end",
+    "last": "low"
+  },
+  "shotTypes": {
+    "lead": "the lead three-quarter MCU",
+    "front": "the lead more frontal",
+    "lead-seated": "the lead full body seated on the keys",
+    "lead-low": "the lead from a low angle",
+    "lead-profile": "the lead in a tight three-quarter profile",
+    "lead-reach": "the lead reaching toward the agents",
+    "lead-wide": "the lead small, low in frame, the screen above",
+    "cu": "an agent close, filling the width",
+    "full": "an agent full body with arms and feet",
+    "side": "an agent three-quarter with the city behind",
+    "two": "two characters in one frame",
+    "wide": "both at the frame edges, the screen between them",
+    "high": "a high angle over the keyboard",
+    "end": "the extra-wide of the whole board",
+    "board": "the dashboard as the subject, cards readable, the cast small at the bottom corners",
+    "low": "the camera at key level: big keys in front, the screen above (often just before the end)",
+    "lead-city": "the lead with the night city behind him (the reverse angle, dashboard out of frame)",
+    "top": "straight down over the keys and the lead"
+  },
+  "spec": {
+    "Set": "A giant laptop: the cast on the keys, a wall-size dashboard of agent cards behind, a night city around",
+    "Screen": "Carries jokes and callbacks: cards whose lines change with the story (counters, typed lines)",
+    "Render look": "Flat-shaded faceted low poly, saturated purple and orange, bloom",
+    "Lens and focus": "Medium lenses (26 to 30 degrees), background readable",
+    "Camera motion": "Mostly locked off with small drifts; the motion comes from the characters",
+    "Cutting": "About 30 shots a minute, a dozen camera set-ups",
+    "Captions": "White bold sans, no box, upper middle",
+    "Sound": "A light music bed carved under the voices, small effects",
+    "Loudness": "-14 LUFS",
+    "Best for": "Stories about tools and building, jokes that are numbers on a screen; more work per episode"
+  },
+  "defaultScenario": "night-city",
+  "scenarios": {
+    "night-city": {
+      "name": "Night city",
+      "summary": "The giant laptop at night: a starry sky over a lit skyline all around, a warm key on the cast, the dashboard glowing blue."
+    },
+    "window-ledge": {
+      "name": "Window ledge",
+      "summary": "High above the city at night: the cast stands on a dark window sill, a cross-framed window onto stars and lit towers, big warm lamps blurred along the top, the agent dashboard glowing along the foot of the frame."
+    }
+  }
+}

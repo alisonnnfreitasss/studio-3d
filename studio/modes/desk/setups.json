@@ -1,0 +1,84 @@
+{
+ "measured": "one frame per shot read by four readers; camera motion measured frame to frame ",
+ "setups": [
+  {
+   "shot": {
+    "type": "cu"
+   },
+   "name": "Agent close-up",
+   "share": 0.375,
+   "hold": 1.82,
+   "shots": 112,
+   "framing": "Square-on at the agent's eye height on the desk; the agent fills 50 to 87% of the height, eyes 64% down; the lead soft in an upper corner, bokeh opposite.",
+   "motion": "Pulls out about 4.4% a second when it moves (11% on a long shot)."
+  },
+  {
+   "shot": {
+    "type": "lead"
+   },
+   "name": "Lead, three-quarter",
+   "share": 0.223,
+   "hold": 2.03,
+   "shots": 64,
+   "framing": "Eye level, long lens; face 40% across (45-60% depending on the side), eyes 52% down, head about 44% of the frame; the window melts to bokeh.",
+   "motion": "Pushes in about 3.8% a second; opens 10 of 13 reels."
+  },
+  {
+   "shot": {
+    "type": "front"
+   },
+   "name": "Lead, square-on",
+   "share": 0.142,
+   "hold": 1.68,
+   "shots": 48,
+   "framing": "Eyes in the lens; face 48% across, eyes 52%, chin 73%. Comes later in a reel than the three-quarter (60% in, against 39%).",
+   "motion": "Pushes in slowly."
+  },
+  {
+   "shot": {
+    "type": "wide"
+   },
+   "name": "Wide",
+   "share": 0.107,
+   "hold": 2.33,
+   "shots": 27,
+   "framing": "In front of the desk at the lead's chin height, 3 to 5 degrees down, normal lens; eyes 37% down, desk edge about 69%; usually twice a reel, near 30% and 70%.",
+   "motion": "Drifts 5 to 9%."
+  },
+  {
+   "shot": {
+    "type": "end"
+   },
+   "name": "Closing wide",
+   "share": 0.069,
+   "hold": 3.65,
+   "shots": 12,
+   "framing": "The wide again, always last (12 of 13), 2.6 to 5 s.",
+   "motion": "Dollies back 20 to 24% in about 2.5 s."
+  },
+  {
+   "shot": {
+    "type": "wide",
+    "scenario": "classroom"
+   },
+   "name": "Over the shoulder (classroom)",
+   "share": 0.037,
+   "hold": 2.63,
+   "shots": 7,
+   "framing": "At the lead's head height, head cropped at the right edge, the board 28 to 57% down, the agent small lower-left.",
+   "motion": "Mostly a slow push."
+  },
+  {
+   "shot": {
+    "type": "cu",
+    "on": "codex"
+   },
+   "name": "Second agent close-up",
+   "share": 0.023,
+   "hold": 1.2,
+   "shots": 10,
+   "framing": "The agent close-up framing on the other agent.",
+   "motion": "As the close-up."
+  }
+ ]
+}

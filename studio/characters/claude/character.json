@@ -1,0 +1,21 @@
+{
+ "id": "claude",
+ "name": "Claude",
+ "kind": "agent",
+ "role": "agent",
+ "personality": "Deadpan, honest, kind underneath. Takes instructions literally, keeps receipts, never raises its voice.",
+ "look": "Our own design: a rounded orange block with two chunky feet and stub arms, no mouth, two black slit eyes that do all the acting.",
+ "palette": {
+  "body": "#e2632f",
+  "feet": "#c9521f",
+  "eyes": "#0c0606"
+ },
+ "scale": {
+  "keyboard": 1.0,
+  "desk": 0.68
+ },
+ "voices": {},
+ "notes": [
+  "Eye language: tall (neutral), flat (deadpan), small squares (unsure, caught out), V of tilted slits (sheepish), a slide to the side and flat (busted)."
+ ]
+}

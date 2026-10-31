@@ -1,0 +1,9 @@
+{
+  "name": "studio-3d",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@hyperframes/core": "^0.8.181",
+    "puppeteer-core": "25.15.0"
+  }
+}

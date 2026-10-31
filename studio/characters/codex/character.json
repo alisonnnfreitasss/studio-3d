@@ -1,0 +1,21 @@
+{
+ "id": "codex",
+ "name": "Codex",
+ "kind": "agent",
+ "role": "agent",
+ "personality": "Fast, literal, a little smug. Does the thing before you finish asking, then reports it in two words.",
+ "look": "Our own design: a charcoal terminal block on four short legs, a dark screen face with a glowing cyan eye glyph and a blinking cursor, a small antenna with a cyan tip.",
+ "palette": {
+  "shell": "#2b303c",
+  "screen": "#080b11",
+  "glow": "#5ee6ff"
+ },
+ "scale": {
+  "keyboard": 0.95,
+  "desk": 0.62
+ },
+ "voices": {},
+ "notes": [
+  "Face glyphs: > neutral, ^ happy, - deadpan, o shock, ? confused, < busted; the cursor pulses while it talks and turns into a smirk when smug."
+ ]
+}

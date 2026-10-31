@@ -1,0 +1,3 @@
+STEP: the script. Read the first 80 lines of {KIT}/FORMAT.md (the format) first, more only if you need it. Check any fact you state; if unsure, leave it out.
+Write script.json in this folder: {"title": "...", "scenes": {"hook": "Hook: ..."}, "lines": [{"scene": "hook", "text": "One spoken sentence."}], "hooks": [{"text": "...", "why": "..."}], "needs": ["worlds, props or effects the reel needs that are not in the kit"]}.
+Follow FORMAT.md's skeleton scaled to the target length, in plain spoken English. lines[0] is the best of three opening lines in "hooks". Stay within 10% of the word target. Use assets listed in {KIT}/WORLDS.md and {KIT}/README.md where the topic allows. No brand name, no page name, no watermark.

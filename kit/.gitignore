@@ -1,0 +1,8 @@
+# the kit self-test (tools/selftest.py) ports a finished reel here and deletes it afterwards
+_toolstest/
+# the kit JS copy compose.py puts in a reel built from here (js/ is the source)
+demo/build/js/kit/
+# the kit JS copy the smoke test runs on (demo/tools/smoke.mjs)
+demo/smoke/js/kit/
+# demo renders and stills (made by the tools)
+demo/renders/

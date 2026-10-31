@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Studio 3D</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m12 3 9 5v8l-9 5-9-5V8z' fill='%23ee7a2b'/%3E%3C/svg%3E" />
+    <script>
+      document.documentElement.dataset.theme = "dark";
+      try {
+        const d = document.documentElement;
+        d.dataset.theme = localStorage.getItem("s3d-theme") === "light" ? "light" : "dark";
+      } catch (e) {}
+    </script>
+    <link rel="stylesheet" href="/ui/style.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "/vendor/three/build/three.module.js",
+          "three/addons/": "/vendor/three/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+    <header id="bar">
+      <a class="brand" href="#/today" aria-label="Studio 3D, home"><span class="orb"></span><span class="brand-name">Studio</span><span class="os-tag">3D</span></a>
+      <div class="who"><img id="portrait" alt="" /><select id="influencer" title="Switch page"></select></div>
+      <div class="ttl"><span id="crumb-page"></span></div>
+      <span class="right">
+        <a class="live" id="livedot" href="#/videos/working"><i></i><span>Checking</span></a>
+        <button class="claudebtn" id="claudebtn" title="Ask Claude"><i></i><span>Claude</span></button>
+        <select id="uilang" title="Studio language"><option value="en">EN</option><option value="pt">PT</option></select>
+        <button class="themebtn" id="themebtn" title="Light or dark">◑ <span id="themelbl">Dark</span></button>
+        <button class="qall" id="qall" title="Show all hints">?</button>
+      </span>
+    </header>
+    <nav id="dock" aria-label="Pages"></nav>
+    <div class="page"><main id="page"></main></div>
+    <dialog id="dialog"><form method="dialog" id="dialog-form"></form></dialog>
+    <script type="module" src="/ui/app.js"></script>
+  </body>
+</html>

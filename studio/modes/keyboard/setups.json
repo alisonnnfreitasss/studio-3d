@@ -1,0 +1,149 @@
+{
+ "measured": "one frame per shot read by four readers; camera motion measured frame to frame ",
+ "setups": [
+  {
+   "shot": {
+    "type": "cu"
+   },
+   "name": "Agent close-up",
+   "share": 0.314,
+   "hold": 2.08,
+   "shots": 626,
+   "framing": "Frontal; the block fills the width, top edge 36% down, bottom 87%, eyes 50-57%, legs cut.",
+   "motion": "Locked off; now and then a punch-in."
+  },
+  {
+   "shot": {
+    "type": "lead"
+   },
+   "name": "Lead, head and torso",
+   "share": 0.231,
+   "hold": 1.77,
+   "shots": 552,
+   "framing": "Eye height, close; face 28 to 30% across and 62% down, head 35 to 55% of the frame, turned toward the agent with room on that side; the caption above the head.",
+   "motion": "Locked off; opens 60 of 64 reels; ping-pongs with the agent close-up."
+  },
+  {
+   "shot": {
+    "type": "full"
+   },
+   "name": "Agent full body",
+   "share": 0.102,
+   "hold": 2.33,
+   "shots": 186,
+   "framing": "Just above the block's top, 5 to 10 degrees down; the block 45 to 80% of the width, big soft keycaps in the lower corners.",
+   "motion": "Locked off; sometimes a two-size punch-in on one line."
+  },
+  {
+   "shot": {
+    "type": "board"
+   },
+   "name": "Dashboard",
+   "share": 0.072,
+   "hold": 1.87,
+   "shots": 172,
+   "framing": "The card wall is the subject, readable; both characters 20 to 25% tall in the lower corners.",
+   "motion": "Silent beats of about 1 s."
+  },
+  {
+   "shot": {
+    "type": "lead-seated"
+   },
+   "name": "Lead seated",
+   "share": 0.07,
+   "hold": 2.4,
+   "shots": 125,
+   "framing": "Head height; face 31% across, the figure 55 to 75% of the frame height, the city in a top corner.",
+   "motion": "Locked off."
+  },
+  {
+   "shot": {
+    "type": "low"
+   },
+   "name": "Key level",
+   "share": 0.031,
+   "hold": 1.57,
+   "shots": 84,
+   "framing": "The camera at key level: near keys at the bottom, the card wall filling the frame, the agent cut by the right edge, a sliver of the lead at the left.",
+   "motion": "Usually just before the closing wide."
+  },
+  {
+   "shot": {
+    "type": "side"
+   },
+   "name": "Agent three-quarter",
+   "share": 0.029,
+   "hold": 2.37,
+   "shots": 56,
+   "framing": "The block turned 25 to 30 degrees, the camera at its head height, about 80% of the width.",
+   "motion": "Locked off."
+  },
+  {
+   "shot": {
+    "type": "lead-wide"
+   },
+   "name": "Lead small under the board",
+   "share": 0.027,
+   "hold": 2.27,
+   "shots": 49,
+   "framing": "The lead's camera pulled back: face 35% across and 76% down, the cards sharp above.",
+   "motion": "Locked off."
+  },
+  {
+   "shot": {
+    "type": "end"
+   },
+   "name": "Closing wide",
+   "share": 0.024,
+   "hold": 1.63,
+   "shots": 69,
+   "framing": "Low wide: the card grid mid-frame, the lead about 25% across and the agent 75%, each about 15% tall.",
+   "motion": "Always last, about 1.6 s; a third of the reels fade to black (0.7 s, then 0.2 s of black)."
+  },
+  {
+   "shot": {
+    "type": "lead",
+    "prop": "phone"
+   },
+   "name": "Lead lit by a phone",
+   "share": 0.017,
+   "hold": 2.37,
+   "shots": 33,
+   "framing": "The head-and-torso shot with a glowing phone lighting the face from below.",
+   "motion": "A gag, a few shots a reel at most."
+  },
+  {
+   "shot": {
+    "type": "lead-city"
+   },
+   "name": "Lead with the city behind",
+   "share": 0.019,
+   "hold": 2.07,
+   "shots": 38,
+   "framing": "The reverse angle: the camera turned from the dashboard toward the night-city window; split light on the face.",
+   "motion": "Locked off."
+  },
+  {
+   "shot": {
+    "type": "wide"
+   },
+   "name": "Wide from above",
+   "share": 0.011,
+   "hold": 1.0,
+   "shots": 40,
+   "framing": "30 to 40 degrees down: keys in the lower half, the lead left, the agent right.",
+   "motion": "A short push; silent beats, mostly 38 to 74% into the reel."
+  },
+  {
+   "shot": {
+    "type": "top"
+   },
+   "name": "Top-down",
+   "share": 0.004,
+   "hold": 2.43,
+   "shots": 8,
+   "framing": "60 to 85 degrees down over the keys, the lead upper left.",
+   "motion": "Rare, late in the reel (about 77%)."
+  }
+ ]
+}

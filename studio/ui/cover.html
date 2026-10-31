@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cover</title>
+    <!-- An episode's cover (the reel's thumbnail), 1080 x 1920: a still of the episode's own set and
+         cast framed for a cover, a series pill and a two-line title with one highlighted word.
+         Our cover layout, in our sets, cast, type and
+         colours. The title sits between 64% and 83% of the height, inside the 3:4
+         crop the Instagram grid shows (12.5% to 87.5%).
+         /ui/cover.html?slug=inbox-zero&lang=pt   (the cover spec is episode.json -> cover)
+         Optional: &deg=-10&dist=30&h=1.6&fov=24&fx=0.5&fy=0.34 (the camera), &t= (the moment),
+         &emotions=lead:worried,claude:deadpan, &bare=1 (no text). Sets window.__ready. -->
+    <style>
+      @font-face {
+        font-family: "Bricolage Grotesque";
+        src: url("/assets/fonts/bricolage-grotesque-latin-wght-normal.woff2") format("woff2");
+        font-weight: 200 800;
+        font-display: block;
+      }
+      @font-face {
+        font-family: "Geist";
+        src: url("/assets/fonts/Geist.woff2") format("woff2");
+        font-weight: 100 900;
+        font-display: block;
+      }
+      html, body { margin: 0; background: #000; }
+      .frame { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+      canvas { display: block; position: absolute; inset: 0; }
+      .shade {
+        position: absolute; inset: 0; pointer-events: none;
+        background: linear-gradient(180deg, rgba(6, 4, 14, 0) 0%, rgba(6, 4, 14, 0) 47%, rgba(6, 4, 14, 0.5) 61%,
+          rgba(6, 4, 14, 0.86) 76%, rgba(6, 4, 14, 0.95) 100%);
+      }
+      .block {
+        position: absolute; left: 76px; right: 76px; bottom: 330px;
+        display: flex; flex-direction: column; align-items: flex-start; gap: 26px;
+      }
+      .pill {
+        font-family: "Geist", sans-serif; font-weight: 800; font-size: 31px; letter-spacing: 0.05em;
+        color: #120d22; padding: 10px 20px 9px; border-radius: 13px; line-height: 1;
+      }
+      .title {
+        font-family: "Bricolage Grotesque", sans-serif; font-weight: 800; line-height: 1.02;
+        letter-spacing: -0.025em; color: #fff; width: 100%;
+        text-shadow: 0 4px 22px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.35);
+      }
+      .title .ln { display: block; white-space: nowrap; }
+      .bare .shade, .bare .block { display: none; }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.181.2/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div class="frame" id="frame">
+      <canvas id="c"></canvas>
+      <div class="shade"></div>
+      <div class="block"><div class="pill" id="pill"></div><div class="title" id="title"></div></div>
+    </div>
+    <script type="module">
+      import * as THREE from "three";
+      import { createStage } from "/engine/runtime.js";
+      import { aim } from "/engine/util.js";
+
+      // the three series: the pill's words and colour (the highlight takes the same colour)
+      const SERIES = {
+        life: { en: "AI LIFE · EP {n}", pt: "VIDA COM IA · EP {n}", color: "#ffd23f" },
+        try: { en: "TRY THIS · EP {n}", pt: "TESTA ISSO · EP {n}", color: "#3ddc97" },
+        plain: { en: "AI IN PLAIN ENGLISH · PART {n}", pt: "IA SEM ENROLAÇÃO · PARTE {n}", color: "#b98cff" },
+      };
+      // the cover camera per mode: around the lead's facing (deg), distance, height over the eyes,
+      // lens, and where the lead's head lands in the frame (fx, fy from the top left)
+      const CAM = {
+        desk: { deg: 0, dist: 24, h: 1.4, fov: 24, fx: 0.5, fy: 0.33, dof: 0.01 },
+        keyboard: { deg: -15, dist: 15, h: 1.2, fov: 30, fx: 0.5, fy: 0.35, dof: 0.008, blur: 3 },
+      };
+      // a set whose own camera makes the better cover: "type" names it (the classroom's over-the-
+      // shoulder wide shows the board, the teacher on his books and the lead at his desk)
+      // (on the window ledge the lead stands with Claude, the city behind)
+      const BY_SCENARIO = {
+        classroom: { type: "wide" },
+        "window-ledge": { with: "claude", deg: 10, dist: 17, h: 1.2, fov: 30, fy: 0.37, mix: 0.38 },
+      };
+
+      const q = new URLSearchParams(location.search);
+      const slug = q.get("slug"), lang = q.get("lang") || "en";
+      if (q.get("bare")) document.body.classList.add("bare");
+      const [studio, TL0] = await Promise.all([
+        (await fetch("/api/studio")).json(),
+        (await fetch(`/api/episodes/${slug}/rehearsal?lang=${lang}`)).json(),
+      ]);
+      const entry = studio.episodes.find((e) => e.slug === slug);
+      const ep = entry.episode, script = entry.script || {};
+      const cover = ep.cover || {};
+      const modeId = TL0.mode, lead = TL0.lead;
+
+      // who feels what: the lead as in the first line, each agent as in its first line; the cover
+      // spec or the URL can say otherwise
+      const lines = (script.lines || []).filter((l) => l.silent == null);
+      const emo = {};
+      for (const l of lines) if (l.emotion && !(l.who in emo)) emo[l.who] = l.emotion;
+      Object.assign(emo, cover.emotions || {});
+      for (const kv of (q.get("emotions") || "").split(",").filter(Boolean)) { const [k, v] = kv.split(":"); emo[k] = v; }
+
+      const P = { ...(CAM[modeId] || CAM.desk), ...(BY_SCENARIO[TL0.scenario] || {}), ...(cover.camera || {}) };
+      for (const k of ["deg", "dist", "h", "fov", "fx", "fy", "dof", "blur", "mix"]) if (q.get(k) != null) P[k] = parseFloat(q.get(k));
+      if (q.get("with")) P.with = q.get("with");
+      if (q.get("type")) P.type = q.get("type") === "cover" ? undefined : q.get("type");
+      const end = TL0.end || 30;
+      const t = q.get("t") != null ? parseFloat(q.get("t")) : end - 0.1; // the board and the screen fully written
+      const TL = {
+        ...TL0, lines: [], captions: [], hops: [], leans: [], props: [],
+        emotions: Object.entries(emo).map(([who, emotion]) => ({ t: 0, who, emotion })),
+        shots: [{ n: 1, start: 0, end, camera: { type: P.type || "cover" } }],
+      };
+      const [mode, scenario, ...mods] = await Promise.all([
+        import(`/modes/${modeId}/set.js`), import(`/modes/${modeId}/scenarios/${TL.scenario}.js`), ...TL.cast.map((c) => import(`/characters/${c}/model.js`)),
+      ]);
+      const characters = Object.fromEntries(TL.cast.map((c, i) => [c, mods[i]]));
+      const canvas = document.getElementById("c");
+      canvas.width = 1080;
+      canvas.height = 1920;
+      const stage = createStage({ canvas, width: 1080, height: 1920, TL, mode, scenario, characters });
+
+      const head = (id) => stage.cast[id].anchors.head.getWorldPosition(new THREE.Vector3());
+      // the cover camera turns around the lead's facing; with "with" (an agent) it frames the point
+      // between the two heads, so both are in the picture
+      const partner = P.with === "first" ? TL.cast.find((c) => c !== lead) : P.with;
+      stage.set.cameras.cover = () => {
+        const H = head(lead), yaw = stage.cast[lead].root.userData.baseYaw ?? 0;
+        const T = partner && stage.cast[partner] ? H.clone().lerp(head(partner), P.mix ?? 0.5) : H;
+        const f = new THREE.Vector3(Math.sin(yaw), 0, Math.cos(yaw)), r = new THREE.Vector3(f.z, 0, -f.x);
+        const a = THREE.MathUtils.degToRad(P.deg);
+        const pos = T.clone().addScaledVector(r, Math.sin(a) * P.dist).addScaledVector(f, Math.cos(a) * P.dist).add(new THREE.Vector3(0, P.h, 0));
+        return { pos, look: aim(pos, T, P.fx, P.fy, P.fov), fov: P.fov, focus: H, dof: P.dof, screenBlur: P.blur ?? 3 };
+      };
+      stage.renderAt(t);
+
+      // the text: the pill, then the title, one line per entry, sized so the longest line fits
+      const s = SERIES[ep.series] || SERIES.life;
+      const pill = document.getElementById("pill");
+      pill.textContent = s[lang].replace("{n}", ep.seriesN ?? "");
+      pill.style.background = s.color;
+      const title = document.getElementById("title");
+      const tl = cover.title?.[lang] || [ep.title];
+      const hi = cover.highlight?.[lang];
+      let done = false;
+      const esc = (x) => x.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]);
+      title.innerHTML = tl.map((ln) => {
+        let h = esc(ln);
+        if (hi && !done && ln.includes(hi)) {
+          h = h.replace(esc(hi), `<span style="color:${s.color}">${esc(hi)}</span>`);
+          done = true;
+        }
+        return `<span class="ln">${h}</span>`;
+      }).join("");
+      await document.fonts.ready;
+      let size = 118;
+      title.style.fontSize = size + "px";
+      const fits = () => [...title.querySelectorAll(".ln")].every((x) => x.scrollWidth <= title.clientWidth);
+      while (!fits() && size > 68) title.style.fontSize = --size + "px";
+
+      // where the lead's face landed, for checking: % from the top left
+      const p = head(lead).project(stage.camera);
+      const tb = title.getBoundingClientRect(), pb = pill.getBoundingClientRect();
+      window.__info = { face: [Math.round((p.x + 1) * 50), Math.round((1 - p.y) * 50)], size, pillTop: Math.round(pb.top / 19.2), titleBottom: Math.round(tb.bottom / 19.2), camera: P };
+      window.__ready = true;
+    </script>
+  </body>
+</html>

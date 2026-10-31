@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Portrait</title>
+    <!-- A square portrait of one character for a profile photo or an icon, drawn by the same model.js
+         files the videos render, over a brand gradient, framed for a circle crop (Instagram, YouTube):
+         /ui/portrait.html?char=lead&variant=tee-red&emotion=happy&angle=15&bg=A069E6,512AAF,000547&size=1080
+         Params: char, variant (outfit or look), emotion, angle (degrees round the character, 0 = front),
+         bg (radial gradient stops, centre first), rim (hex, the back light), zoom (1 = head and
+         shoulders), t (seconds, for the idle sway), size (pixels). Sets window.__ready when drawn. -->
+    <style>
+      html, body { margin: 0; background: transparent; }
+      #frame { position: relative; overflow: hidden; }
+      #frame canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.181.2/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="frame"><canvas id="c"></canvas></div>
+    <script type="module">
+      import * as THREE from "three";
+      const q = new URLSearchParams(location.search);
+      const id = q.get("char") || "lead";
+      const size = parseInt(q.get("size") || "1080", 10);
+      const angle = THREE.MathUtils.degToRad(parseFloat(q.get("angle") || "15"));
+      const emotion = q.get("emotion") || "happy";
+      const zoom = parseFloat(q.get("zoom") || "1");
+      const stops = (q.get("bg") || "A069E6,512AAF,000547").split(",").map((c) => "#" + c.replace("#", ""));
+      const rimColor = new THREE.Color("#" + (q.get("rim") || "d9ccff").replace("#", ""));
+
+      // the background: a radial brand gradient, its glow up behind the hair so the dark hair stands off it
+      const frame = document.getElementById("frame");
+      frame.style.width = frame.style.height = `${size}px`;
+      const [a, b = a, c = b] = stops;
+      frame.style.background = `radial-gradient(circle at 50% 30%, ${a} 0%, ${b} 58%, ${c} 100%)`;
+
+      const mod = await import(`/characters/${id}/model.js`);
+      const ch = mod.build({ variant: q.get("variant") || undefined });
+      const scene = new THREE.Scene();
+      scene.add(ch.root);
+      ch.update(parseFloat(q.get("t") || "0.6"), { emotion, from: emotion, mix: 1, talk: 0, blink: 1, look: 0 });
+      ch.root.updateMatrixWorld(true);
+
+      // a portrait rig: warm key from the front left, a soft fill, and two back lights tinted toward the
+      // background so the hair and shoulders keep an edge
+      scene.add(new THREE.HemisphereLight(0xdfe6ff, 0x2a2433, 1.0));
+      const key = new THREE.DirectionalLight(0xffe2c4, 2.5);
+      key.position.set(-4, 6, 8);
+      const fill = new THREE.DirectionalLight(0xffffff, 0.6);
+      fill.position.set(6, 2, 7);
+      const rim = new THREE.DirectionalLight(rimColor, 2.4);
+      rim.position.set(2, 6, -8);
+      const rim2 = new THREE.DirectionalLight(rimColor, 1.4);
+      rim2.position.set(-7, 2, -4);
+      scene.add(key, fill, rim, rim2);
+
+      // framing: the face a little below the centre, the hair inside the circle, the shoulders at the foot
+      const face = ch.anchors.head.getWorldPosition(new THREE.Vector3());
+      const fov = 24, H = 4.6 / zoom;
+      const dist = H / 2 / Math.tan(THREE.MathUtils.degToRad(fov / 2));
+      const camera = new THREE.PerspectiveCamera(fov, 1, 0.1, 200);
+      camera.position.set(face.x + Math.sin(angle) * dist, face.y + 0.35, face.z + Math.cos(angle) * dist);
+      camera.lookAt(face.x, face.y + 0.3, face.z);
+
+      const canvas = document.getElementById("c");
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+      renderer.setPixelRatio(2);
+      renderer.setSize(size, size, false);
+      renderer.setClearColor(0x000000, 0);
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.1;
+      renderer.render(scene, camera);
+      window.__ready = true;
+    </script>
+  </body>
+</html>
